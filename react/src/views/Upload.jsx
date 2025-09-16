@@ -211,7 +211,7 @@ const Upload = () => {
         setSelectedImage(null);
         
         // Optionally redirect to projects page or profile
-        // window.location.href = '/app/projects';
+        window.location.href = '/projects';
       } else {
         alert('Project upload failed: ' + (result.error || 'Unknown error'));
       }
