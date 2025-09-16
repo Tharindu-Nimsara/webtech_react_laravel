@@ -1,8 +1,6 @@
 import React from 'react';
 
-
 // ProjectCard Props Structure:
-
 // const project = {
 //   id: 1,
 //   title: "Project Title",
@@ -17,6 +15,7 @@ import React from 'react';
 // };
 
 const ProjectCard = ({ project }) => {
+  console.log('Project image URL:', project.image);
   const {
     id,
     title,
@@ -30,6 +29,20 @@ const ProjectCard = ({ project }) => {
     authorDetails
   } = project;
 
+  // Enhanced debugging
+  console.log('ProjectCard rendered:', { id, title, image });
+  console.log('Image exists:', !!image);
+  console.log('Image type:', typeof image);
+
+  // Handle image error by using fallback
+  const handleImageError = (e) => {
+    console.log('Image error for project:', id, 'URL:', e.target.src);
+    e.target.src = 'https://images.unsplash.com/photo-1518611012118-696072aa579a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80';
+  };
+  const handleImageLoad = () => {
+    console.log('Image loaded successfully for project:', id);
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
       {/* Project Image with Category Overlay */}
@@ -37,9 +50,12 @@ const ProjectCard = ({ project }) => {
         <img 
           src={image} 
           alt={title}
-          className="w-full h-48 object-cover"
+          className="w-full h-48 object-cover "
+          
+          onError={handleImageError}
+          onLoad={handleImageLoad}
         />
-        <div className="absolute inset-0 bg-blue-600 bg-opacity-90 flex flex-col justify-between p-4">
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
           <div className="text-white">
             <h3 className="text-xl font-bold mb-2">{category}</h3>
             <p className="text-blue-100 text-sm">{department}</p>
@@ -105,4 +121,3 @@ const ProjectCard = ({ project }) => {
 };
 
 export default ProjectCard;
-
