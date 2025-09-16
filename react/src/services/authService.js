@@ -32,6 +32,49 @@ export const signupUser = async (userData) => {
     }
 };
 
+export const uploadProject = async (projectData) => {
+    try {
+        console.log("Sending project upload request...");
+        
+        // Use POST with FormData for file upload
+        const response = await axiosClient.post("/projects", projectData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+
+        console.log("Project upload response:", response);
+
+        // Check if response indicates success
+        if (response.data && response.data.success) {
+            return {
+                success: true,
+                data: response.data,
+                message: response.data.message || "Project uploaded successfully",
+            };
+        } else {
+            return {
+                success: false,
+                error: response.data?.message || response.data?.error || "Project upload failed",
+            };
+        }
+    } catch (error) {
+        console.error("Full error details:", error);
+        console.error("Error response:", error.response?.data);
+        console.error("Error status:", error.response?.status);
+
+        return {
+            success: false,
+            error:
+                error.response?.data?.message ||
+                error.response?.data?.error ||
+                error.message ||
+                "Project upload failed",
+        };
+    }
+};
+
+
 export const loginUser = async (credentials) => {
     try {
         const response = await axiosClient.post("/auth/login", {

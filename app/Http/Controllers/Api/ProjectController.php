@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class ProjectController extends Controller
 {
@@ -47,7 +48,6 @@ class ProjectController extends Controller
                 'success' => true,
                 'projects' => $projects,
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -63,10 +63,17 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         try {
+            // Add debugging
+            Log::info('=== PROJECT UPLOAD DEBUG ===');
+            Log::info('User ID: ' . $request->user()->id);
+            Log::info('All request data:', $request->all());
+            Log::info('Request method: ' . $request->method());
+            Log::info('Content-Type: ' . $request->header('Content-Type'));
+
             $validator = Validator::make($request->all(), [
                 'title' => 'required|string|max:255',
                 'category' => 'required|string|max:100',
-                'description' => 'required|string|min:50',
+                'description' => 'required|string|min:5',
                 'department' => 'required|string',
                 'year' => 'required|string',
                 'tags' => 'nullable|string',
@@ -77,6 +84,7 @@ class ProjectController extends Controller
             ]);
 
             if ($validator->fails()) {
+                Log::error('Validation failed:', $validator->errors()->toArray());
                 return response()->json([
                     'success' => false,
                     'message' => 'Validation failed',
@@ -115,7 +123,6 @@ class ProjectController extends Controller
                     'title' => $project->title,
                 ]
             ], 201);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -157,13 +164,12 @@ class ProjectController extends Controller
                         'email' => $project->user->email,
                         'department' => $project->user->department,
                         'year_of_study' => $project->user->year_of_study,
-                        'profile_image_url' => $project->user->profile_image 
-                            ? asset('storage/profile_images/' . $project->user->profile_image) 
+                        'profile_image_url' => $project->user->profile_image
+                            ? asset('storage/profile_images/' . $project->user->profile_image)
                             : null,
                     ],
                 ]
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -199,8 +205,8 @@ class ProjectController extends Controller
                 'success' => true,
                 'projects' => $projects,
             ]);
-
         } catch (\Exception $e) {
+            Log::error('Project upload exception: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to fetch user projects',
