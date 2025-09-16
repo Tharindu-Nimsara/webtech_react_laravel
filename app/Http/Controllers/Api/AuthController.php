@@ -12,6 +12,7 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+
     /**
      * Register a new user
      */
@@ -62,12 +63,10 @@ class AuthController extends Controller
                     'email' => $user->email,
                     'department' => $user->department,
                     'year_of_study' => $user->year_of_study,
-                    'initials' => $user->initials,
                 ],
                 'token' => $token,
                 'token_type' => 'Bearer'
             ], 201);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -124,12 +123,10 @@ class AuthController extends Controller
                     'email' => $user->email,
                     'department' => $user->department,
                     'year_of_study' => $user->year_of_study,
-                    'initials' => $user->initials,
                 ],
                 'token' => $token,
                 'token_type' => 'Bearer'
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -151,7 +148,6 @@ class AuthController extends Controller
                 'success' => true,
                 'message' => 'Logout successful'
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -177,12 +173,19 @@ class AuthController extends Controller
                     'email' => $user->email,
                     'department' => $user->department,
                     'year_of_study' => $user->year_of_study,
-                    'initials' => $user->initials,
+                    'bio' => $user->bio,
+                    'skills' => $user->skills ? explode(',', $user->skills) : [],
+                    'github_url' => $user->github_url,
+                    'website_url' => $user->website_url,
+                    'phone' => $user->phone,
+                    'location' => $user->location,
+                    'profile_image_url' => $user->profile_image
+                        ? asset('storage/profile_images/' . $user->profile_image)
+                        : null,
                     'email_verified_at' => $user->email_verified_at,
                     'created_at' => $user->created_at,
                 ]
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -203,7 +206,7 @@ class AuthController extends Controller
                 ->selectRaw('department, COUNT(*) as count')
                 ->groupBy('department')
                 ->get();
-            
+
             $yearStats = User::active()
                 ->selectRaw('year_of_study, COUNT(*) as count')
                 ->groupBy('year_of_study')
@@ -217,7 +220,6 @@ class AuthController extends Controller
                     'years' => $yearStats,
                 ]
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,

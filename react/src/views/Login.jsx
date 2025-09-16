@@ -65,7 +65,7 @@ const Login = ({ onLogin }) => {
         }
         
         // Redirect to home or app
-         window.location.href = '/app';
+         window.location.href = '/';
         
       } else {
         setErrors({ submit: result.error });

@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 
-const Upload_1 = () => {
+const Upload_1 = ({ onNext, initialData = {} }) => {
   const [formData, setFormData] = useState({
-    title: '',
-    category: '',
-    description: '',
-    department: '',
-    year: ''
+    title: initialData.title || '',
+    category: initialData.category || '',
+    description: initialData.description || '',
+    department: initialData.department || '',
+    year: initialData.year || ''
   });
 
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const departments = [
     { value: '', label: 'Select your department' },
@@ -65,13 +66,34 @@ const Upload_1 = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (validateForm()) {
-      // Handle form submission - pass data to parent or next step
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // Simulate API call or processing time
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
       console.log('Form data:', formData);
-      // You can add logic here to move to next step or save data
+      
+      // Call onNext prop if provided (for multi-step form)
+      if (onNext) {
+        onNext(formData);
+      } else {
+        // Handle single-step submission
+        alert('Project information saved successfully!');
+      }
+      
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      alert('Failed to save project information. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -100,7 +122,7 @@ const Upload_1 = () => {
 
           {/* Form Content */}
           <div className="p-6">
-            <div className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
               {/* Project Title and Category Row */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Project Title */}
@@ -120,6 +142,7 @@ const Upload_1 = () => {
                         ? 'border-red-300 bg-red-50' 
                         : 'border-gray-300 hover:border-gray-400'
                     }`}
+                    required
                   />
                   {errors.title && (
                     <p className="mt-1 text-sm text-red-600">{errors.title}</p>
@@ -143,6 +166,7 @@ const Upload_1 = () => {
                         ? 'border-red-300 bg-red-50' 
                         : 'border-gray-300 hover:border-gray-400'
                     }`}
+                    required
                   />
                   {errors.category && (
                     <p className="mt-1 text-sm text-red-600">{errors.category}</p>
@@ -167,6 +191,7 @@ const Upload_1 = () => {
                       ? 'border-red-300 bg-red-50' 
                       : 'border-gray-300 hover:border-gray-400'
                   }`}
+                  required
                 />
                 <div className="flex justify-between items-center mt-1">
                   {errors.description ? (
@@ -196,6 +221,7 @@ const Upload_1 = () => {
                         ? 'border-red-300 bg-red-50' 
                         : 'border-gray-300 hover:border-gray-400'
                     }`}
+                    required
                   >
                     {departments.map(dept => (
                       <option key={dept.value} value={dept.value}>
@@ -225,6 +251,7 @@ const Upload_1 = () => {
                         ? 'border-red-300 bg-red-50' 
                         : 'border-gray-300 hover:border-gray-400'
                     }`}
+                    required
                   />
                   {errors.year && (
                     <p className="mt-1 text-sm text-red-600">{errors.year}</p>
@@ -232,8 +259,28 @@ const Upload_1 = () => {
                 </div>
               </div>
 
-              {/* Form fields end here */}
-            </div>
+              {/* Submit Button */}
+              <div className="flex justify-end pt-6">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className={`px-8 py-3 rounded-lg font-semibold text-white transition-all duration-300 ${
+                    isSubmitting
+                      ? 'bg-blue-400 cursor-not-allowed'
+                      : 'bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+                  }`}
+                >
+                  {isSubmitting ? (
+                    <div className="flex items-center space-x-2">
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span>Processing...</span>
+                    </div>
+                  ) : (
+                    onNext ? 'Continue to Next Step' : 'Save Project Information'
+                  )}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
