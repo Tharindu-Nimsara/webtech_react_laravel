@@ -53,7 +53,7 @@ const Footer = () => {
               </li>
               <li>
                 <a 
-                  href="/contact" 
+                  href="/about" 
                   className="text-gray-400 hover:text-white transition-colors text-sm"
                 >
                   Contact
@@ -68,7 +68,7 @@ const Footer = () => {
             <ul className="space-y-2">
               <li>
                 <a 
-                  href="/help" 
+                  href="/about" 
                   className="text-gray-400 hover:text-white transition-colors text-sm"
                 >
                   Help Center
@@ -76,7 +76,7 @@ const Footer = () => {
               </li>
               <li>
                 <a 
-                  href="/guidelines" 
+                  href="/about" 
                   className="text-gray-400 hover:text-white transition-colors text-sm"
                 >
                   Guidelines
@@ -84,7 +84,7 @@ const Footer = () => {
               </li>
               <li>
                 <a 
-                  href="/privacy" 
+                  href="/about" 
                   className="text-gray-400 hover:text-white transition-colors text-sm"
                 >
                   Privacy Policy
@@ -92,7 +92,7 @@ const Footer = () => {
               </li>
               <li>
                 <a 
-                  href="/terms" 
+                  href="/about" 
                   className="text-gray-400 hover:text-white transition-colors text-sm"
                 >
                   Terms of Service

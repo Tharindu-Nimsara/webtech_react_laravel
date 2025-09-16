@@ -7,6 +7,7 @@ const Profile = ({ userId }) => {
   const [user, setUser] = useState(null);
   const [userProjects, setUserProjects] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingProjects, setIsLoadingProjects] = useState(false);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('Projects');
 
@@ -29,12 +30,8 @@ const Profile = ({ userId }) => {
         if (userResponse.data.success) {
           setUser(userResponse.data.user);
           
-          // TODO: Implement projects API call when available
-          // const projectsResponse = await axiosClient.get(`/users/${userResponse.data.user.id}/projects`);
-          // setUserProjects(projectsResponse.data.projects || []);
-          
-          // For now, using empty array until projects API is implemented
-          setUserProjects([]);
+          // Load user's projects
+          await loadUserProjects(userResponse.data.user.id);
         } else {
           throw new Error(userResponse.data.message || 'Failed to load user data');
         }
@@ -49,6 +46,26 @@ const Profile = ({ userId }) => {
 
     loadUserData();
   }, [userId]);
+
+  const loadUserProjects = async (userIdToLoad) => {
+    setIsLoadingProjects(true);
+    
+    try {
+      const projectsResponse = await axiosClient.get(`/users/${userIdToLoad}/projects`);
+      
+      if (projectsResponse.data.success) {
+        setUserProjects(projectsResponse.data.projects || []);
+      } else {
+        console.warn('Failed to load user projects:', projectsResponse.data.message);
+        setUserProjects([]);
+      }
+    } catch (error) {
+      console.error('Error loading user projects:', error);
+      setUserProjects([]); // Don't show error for projects, just empty state
+    } finally {
+      setIsLoadingProjects(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -264,7 +281,7 @@ const Profile = ({ userId }) => {
                 {/* Projects Counter */}
                 <div className="text-center mb-6">
                   <div className="text-3xl font-bold text-blue-600">
-                    {user.projectCount || userProjects.length}
+                    {userProjects.length}
                   </div>
                   <div className="text-gray-600 text-sm">PROJECTS</div>
                 </div>
@@ -286,7 +303,11 @@ const Profile = ({ userId }) => {
                 </div>
 
                 {/* Projects Grid */}
-                {userProjects.length > 0 ? (
+                {isLoadingProjects ? (
+                  <div className="flex justify-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                  </div>
+                ) : userProjects.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {userProjects.map(project => (
                       <div key={project.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
@@ -307,7 +328,7 @@ const Profile = ({ userId }) => {
                         )}
 
                         <div className="flex justify-between items-center">
-                          <span className="text-gray-500 text-sm">{project.year}</span>
+                          <span className="text-gray-500 text-sm">{project.year || project.created_at}</span>
                           <a 
                             href={`/projects/${project.id}`}
                             className="text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors"
@@ -329,7 +350,7 @@ const Profile = ({ userId }) => {
                     </p>
                     {isOwnProfile && (
                       <a 
-                        href="/app/upload"
+                        href="/upload"
                         className="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
                       >
                         Upload Project

@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProjectController;
@@ -21,7 +22,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::get('/me', [AuthController::class, 'me']);
     });
-    
+
     Route::put('/profile', [ProfileController::class, 'update']);
     Route::post('/projects', [ProjectController::class, 'store']);
 
@@ -29,4 +30,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/projects', [ProjectController::class, 'index']);
     Route::get('/projects/{id}', [ProjectController::class, 'show']);
     Route::get('/users/{userId}/projects', [ProjectController::class, 'getUserProjects']);
+
+    Route::get('/stats', [AuthController::class, 'getStats']);
 });
