@@ -158,16 +158,16 @@ const Signup = ({ onSignup }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center border-2 border-white shadow-md">
-                <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
-                  <span className="text-yellow-600 font-bold text-xs">USJ</span>
-                </div>
+            <div className="w-15 h-15 bg-gradient-to-br  rounded-full flex items-center justify-center ">
+                
+                <img src="../../usj-logo.png" ></img>
+
               </div>
-              <div>
-                <h1 className="text-blue-600 font-bold text-lg">USJ Projects</h1>
-                <p className="text-xs text-gray-500">University of Sri Jayewardenepura</p>
-              </div>
+            <div>
+              <h1 className="text-blue-600 font-bold text-lg">USJ Projects</h1>
+              <p className="text-xs text-gray-500">University of Sri Jayewardenepura</p>
             </div>
+          </div>
             
             <a 
               href="/login" 

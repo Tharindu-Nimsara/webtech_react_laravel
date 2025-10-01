@@ -1,0 +1,18 @@
+goto this pc > coding > webtech-Version-2 > open it with vscode 
+
+open xammp > start apache and MySQL
+
+then go to vscode in terminal type 'php artisan serve' it will run Laravel backend
+
+then open another terminal using plus mark. then type 'cd react'.  then type 'npm run dev' to run frontend.
+
+then using the follow link (ip) open the website.
+
+my user account:
+email : tharinduonline1080@gmail.com
+pass : Tharindu24536
+
+may be it will auto login.
+
+
+
